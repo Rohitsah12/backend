@@ -1,7 +1,5 @@
 const {sum,sub}=require("./second")
 
-
-
 //require format (IIFE)
 // (
 //     function (){
@@ -11,8 +9,6 @@ const {sum,sub}=require("./second")
 //             console.log(a+b);
 //         }
 //     })();
-
-
 
 sum(3,4)
 sub(7,8)
