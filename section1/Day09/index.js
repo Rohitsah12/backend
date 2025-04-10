@@ -101,12 +101,20 @@ app.post("/user/:id",(req,res)=>{
 app.delete("/user/:id",(req,res)=>{
     const id=parseInt(req.params.id);
     const index=AddToCart.findIndex(item=>item.id===id);
-
     if(index!=-1){
         AddToCart.splice(index,1);
-        res.send("Item removed")
+        res.send("Item removed successfully")
     }
-    
+    else{
+        res.send("Item is not present in cart")
+    }
+})
+
+app.get("/user",(req,res)=>{
+    if(AddToCart.length==0){
+        res.send("cart is empty");
+    }
+    res.send(AddToCart);
 })
 
 app.listen(3000,()=>{
