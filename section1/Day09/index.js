@@ -86,6 +86,29 @@ app.patch("/admin",Auth,(req,res)=>{
 })
 
 
+app.post("/user/:id",(req,res)=>{
+    const id=parseInt(req.params.id);
+    const foodItem=FoodMenu.find(item=>item.id===id);
+    if(foodItem){
+        AddToCart.push(foodItem);
+        res.status(200).send("Item added successfully")
+    }
+    else{
+        res.send("Item out of stock");
+    }
+})
+
+app.delete("/user/:id",(req,res)=>{
+    const id=parseInt(req.params.id);
+    const index=AddToCart.findIndex(item=>item.id===id);
+
+    if(index!=-1){
+        AddToCart.splice(index,1);
+        res.send("Item removed")
+    }
+    
+})
+
 app.listen(3000,()=>{
     console.log("Listening at port 3000");
 })
