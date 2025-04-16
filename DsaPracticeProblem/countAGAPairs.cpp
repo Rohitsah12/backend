@@ -13,7 +13,7 @@ typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_
 void solve(){
     int n;
     cin>>n;
-    vector<char>ch;
+    vector<char>ch(n);
     for(int i=0;i<n;i++){
         cin>>ch[i];
     }
@@ -28,6 +28,27 @@ void solve(){
         if(ch[i]=='g') gacount+=acount;
     }
     cout<<agacount;
+}
+void tripletTrick(){
+    int n;
+    cin>>n;
+    vector<char>ch;
+    int ta=0;
+    for(int i=0;i<n;i++){
+        cin>>ch[i];
+        ta++;
+    }
+    int la=0;int ra=0;
+    int ans=0;
+    for(int i=0;i<n;i++){
+        if(ch[i]=='a') la++;
+        if(ch[i]=='g'){
+            ra=ta-la;
+            ans+=(ra*la);
+        }
+    }
+    cout<<ans;
+    
 }
 signed main(){
 ios_base::sync_with_stdio(false);
