@@ -28,8 +28,6 @@ void solve(){
         if(s==0) cout<<v[e]<<endl;
         else cout<<v[e]-v[s-1]<<endl;
     }
-
-    
 }
 signed main(){
 ios_base::sync_with_stdio(false);
