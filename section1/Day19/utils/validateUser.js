@@ -13,7 +13,7 @@ function validateUser(data){
             if(!validator.isEmail(data.emailId))
                 throw new Error("Invalid EMail");
 
-            if(!validator.isStrongPassword(data.password))
+           
 
 
 }

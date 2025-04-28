@@ -4,10 +4,14 @@ const main=require("./database")
 const User=require("./models/users")
 app.use(express.json());
 const validateUser=require("./utils/validateUser")
+const bcrypt=require("bcrypt")
+
 
 app.post("/register",async (req,res)=>{
     try{
         validateUser(req.body)
+        //converting password into hash
+        req.body.password=await bcrypt.hash(req.body.password,10);
 
         await User.create(req.body);
         res.send("user Registered Successfully")
@@ -17,6 +21,13 @@ app.post("/register",async (req,res)=>{
     }
 })
 
+app.post("/login",async (req,res)=>{
+    try {
+        
+    } catch (error) {
+        
+    }
+})
 app.get("/info",async (req,res)=>{
     try{
         const result=await User.find();
