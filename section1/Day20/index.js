@@ -5,6 +5,7 @@ const User=require("./models/users")
 app.use(express.json());
 const validateUser=require("./utils/validateUser")
 const bcrypt=require("bcrypt")
+const jwt = require('jsonwebtoken');
 
 
 app.post("/register",async (req,res)=>{
@@ -23,13 +24,30 @@ app.post("/register",async (req,res)=>{
 
 app.post("/login",async (req,res)=>{
     try {
-        
+        const people=await User.findById(req.body._id);
+        if(!(req.body.emailID===people.emailID))
+            throw new Error("Invalid Credentials");
+
+        const IsAllowed=await bcrypt.compare(req.body.password,people.password);
+
+        if(!IsAllowed)
+            throw new Error("Invalid Credentials");
+
+        //JWT token
+        //ndfdewkejrfjkejrfbjkewjebrfeowkejrjkeo3jer
+        // res.cookie("token","ndfdewkejrfjkejrfbjkewjebrfeowkejrjkeo3jer")
+
+        const token=jwt.sign({_id:people._id,emailID:people.emailID},"Rohit@123",{expiresIn:100})
+        res.send("login Successfully");
     } catch (error) {
         
     }
 })
 app.get("/info",async (req,res)=>{
     try{
+        //valid user or not
+
+        const answer=jwt.verify(req.cookies.token,"Rohit@123")
         const result=await User.find();
         res.send(result);
     }
