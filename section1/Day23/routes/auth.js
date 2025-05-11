@@ -61,26 +61,9 @@ authRouter.post("/login", async(req,res)=>{
 authRouter.post("/logout", async(req,res)=>{
 
     try{
-
-        // validate karna
+        res.cookie("token",null,{expires:new Date(Date.now())});
+        res.send("logout successfuly");
         
-        const people = await User.findOne({emailId:req.body.emailId});
-        
-        // if(!(req.body.emailId===people.emailId))
-        //     throw new Error("Invalid credentials");
-
-        const IsAllowed = people.verifyPassword(req.body.password);
-
-        if(!IsAllowed)
-            throw new Error("Invalid credentials");
-        
-
-        // jwt token 
-
-        const token = people.getJWT();
-
-        res.cookie("token",token);
-        res.send("Login Successfully");
     }
     catch(err){
         res.send("Error: "+err.message);
