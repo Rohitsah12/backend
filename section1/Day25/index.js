@@ -11,6 +11,7 @@ require('dotenv').config()
 const authRouter = require("./routes/auth")
 const userRouter = require("./routes/user")
 const commentRouter = require("./routes/comment")
+const ratelimitter=require("./middleware/ratelimitter")
 
 
 
