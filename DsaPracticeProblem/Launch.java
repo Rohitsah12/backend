@@ -1,46 +1,73 @@
-class Plane{
-    public void takeOff(){
-        System.out.println("Plane is taking off..");
+class Animal{
+    public void eat(){
+        System.out.println("Animal is eating");
     }
-    public void fly(){
-        System.out.println("Plane is flying");
+    public void sleep(){
+        System.out.println("Animal is sleeping");
+    }
+    public void foodHabit(){
+        System.out.println("Animal has food-habit");
+    }
+}
 
+class Deer extends Animal {
+    public void eat() {
+        System.out.println("Deer eats grass.");
     }
-    public void land(){
-        System.out.println("Plane is landing");
+
+    public void sleep() {
+        System.out.println("Deer sleeps in the wild.");
+    }
+
+    public void foodHabit() {
+        System.out.println("Deer is a herbivore.");
+    }
+}
+class Tiger extends Animal {
+    public void eat() {
+        System.out.println("Tiger eats meat.");
+    }
+
+    public void sleep() {
+        System.out.println("Tiger sleeps in the jungle.");
+    }
+
+    public void foodHabit() {
+        System.out.println("Tiger is a carnivore.");
+    }
+}
+class Monkey extends Animal {
+    public void eat() {
+        System.out.println("Monkey eats fruits.");
+    }
+
+    public void sleep() {
+        System.out.println("Monkey sleeps on trees.");
+    }
+
+    public void foodHabit() {
+        System.out.println("Monkey is an omnivore.");
+    }
+}
+class Forest {
+    public void observe(Animal ref) {
+        ref.eat();
+        ref.sleep();
+        ref.foodHabit();
     }
 }
 
-class CargoPlane extends Plane{
-    public void takeOff(){
-        System.out.println("CargoPlane is taking-off form a long-sized runway");
-    }
-    public void fly(){
-        System.out.println("Cargoplane is flying at lower height");
-    }
-    public void land(){
-        System.out.println("CargoPlane is landing on long-sized runway");
-    }
-}
-class PassengerPlane extends Plane{
-    public void takeOff(){
-        System.out.println("CargoPlane is taking-off form a medium-sized runway");
-    }
-    public void fly(){
-        System.out.println("Cargoplane is flying at medium height");
-    }
-    public void land(){
-        System.out.println("CargoPlane is landing on medium-sized runway");
+public class Launch {
+    public static void main(String[] args) {
+        Deer d = new Deer();
+        Tiger t = new Tiger();
+        Monkey m = new Monkey();
+
+        Forest f = new Forest();
+
+        f.observe(d);
+        f.observe(t);
+        f.observe(m);
     }
 }
-class FighterPlane extends Plane{
-    public void takeOff(){
-        System.out.println("CargoPlane is taking-off form a small-sized runway");
-    }
-    public void fly(){
-        System.out.println("Cargoplane is flying at small height");
-    }
-    public void land(){
-        System.out.println("CargoPlane is landing on small-sized runway");
-    }
-}
+
