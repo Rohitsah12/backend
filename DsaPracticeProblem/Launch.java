@@ -1,73 +1,77 @@
-class Animal{
-    public void eat(){
-        System.out.println("Animal is eating");
+abstract class Car {
+    public void start() {
+        System.out.println("Car is starting...");
     }
-    public void sleep(){
-        System.out.println("Animal is sleeping");
-    }
-    public void foodHabit(){
-        System.out.println("Animal has food-habit");
+
+    abstract public void accelerate();
+    abstract public void drive();
+    abstract public void combustion();
+
+    public void stop() {
+        System.out.println("Car is stopping...");
     }
 }
 
-class Deer extends Animal {
-    public void eat() {
-        System.out.println("Deer eats grass.");
+class Maruti800 extends Car {
+    public void accelerate() {
+        System.out.println("Maruti800 is accelerating at a normal pace.");
     }
 
-    public void sleep() {
-        System.out.println("Deer sleeps in the wild.");
+    public void drive() {
+        System.out.println("Maruti800 is driving smoothly.");
     }
 
-    public void foodHabit() {
-        System.out.println("Deer is a herbivore.");
-    }
-}
-class Tiger extends Animal {
-    public void eat() {
-        System.out.println("Tiger eats meat.");
-    }
-
-    public void sleep() {
-        System.out.println("Tiger sleeps in the jungle.");
-    }
-
-    public void foodHabit() {
-        System.out.println("Tiger is a carnivore.");
-    }
-}
-class Monkey extends Animal {
-    public void eat() {
-        System.out.println("Monkey eats fruits.");
-    }
-
-    public void sleep() {
-        System.out.println("Monkey sleeps on trees.");
-    }
-
-    public void foodHabit() {
-        System.out.println("Monkey is an omnivore.");
-    }
-}
-class Forest {
-    public void observe(Animal ref) {
-        ref.eat();
-        ref.sleep();
-        ref.foodHabit();
+    public void combustion() {
+        System.out.println("Maruti800 uses petrol combustion engine.");
     }
 }
 
+class Innova extends Car {
+    public void accelerate() {
+        System.out.println("Innova is accelerating moderately.");
+    }
+
+    public void drive() {
+        System.out.println("Innova is driving with comfort.");
+    }
+
+    public void combustion() {
+        System.out.println("Innova uses diesel combustion engine.");
+    }
+}
+
+class Ferrari extends Car {
+    public void accelerate() {
+        System.out.println("Ferrari is accelerating rapidly!");
+    }
+
+    public void drive() {
+        System.out.println("Ferrari is driving at high speed.");
+    }
+
+    public void combustion() {
+        System.out.println("Ferrari uses high-performance combustion engine.");
+    }
+}
+class Road{
+    public void permit(Car ref){
+        ref.start();
+        ref.accelerate();
+        ref.drive();
+        ref.combustion();
+        ref.stop();
+    }
+}
 public class Launch {
     public static void main(String[] args) {
-        Deer d = new Deer();
-        Tiger t = new Tiger();
-        Monkey m = new Monkey();
+        Car m = new Maruti800();
+        Car i = new Innova();
+        Car f = new Ferrari();
 
-        Forest f = new Forest();
-
-        f.observe(d);
-        f.observe(t);
-        f.observe(m);
+        Road r=new Road();
+        r.permit(f);
+        r.permit(m);
+        r.permit(i);
+      
     }
 }
-
