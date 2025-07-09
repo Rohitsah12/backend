@@ -9,5 +9,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "@types/pg": "^8.15.4",
+    "dotenv": "^17.2.0",
+    "pg": "^8.16.3"
+  }
 }
