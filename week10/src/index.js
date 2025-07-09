@@ -9,24 +9,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const pg_1 = require("pg");
 require("dotenv/config");
-const client = new pg_1.Client({
-    connectionString: process.env.CONNECTION_STRING
-});
-function createUsersTable() {
+const pg_1 = require("pg");
+function getUser(email) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield client.connect();
-        const result = yield client.query(`
-        CREATE TABLE users (
-            id SERIAL PRIMARY KEY,
-            username VARCHAR(50) UNIQUE NOT NULL,
-            email VARCHAR(255) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-        );
-    `);
-        console.log(result);
+        const client = new pg_1.Client({
+            connectionString: process.env.CONNECTION_STRING
+        });
+        try {
+            yield client.connect();
+            const query = 'SELECT * FROM users WHERE email = $1';
+            const result = yield client.query(query, [email]);
+            if (result.rows.length > 0) {
+                console.log('User found:', result.rows[0]);
+                return result.rows[0];
+            }
+            else {
+                console.log('No user found.');
+                return null;
+            }
+        }
+        catch (err) {
+            console.error('Error during fetching user:', err);
+            throw err;
+        }
+        finally {
+            yield client.end();
+        }
     });
 }
-createUsersTable();
+getUser('user3@example.com').catch(console.error);
