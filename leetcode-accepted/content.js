@@ -1,41 +1,51 @@
-// content.js
-
-function getCookie(name) {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return match ? decodeURIComponent(match[2]) : null;
-}
-
-function base64UrlToBase64(str) {
-  let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
-  while (base64.length % 4) base64 += "=";
-  return base64;
-}
-
-function getUsernameFromSessionCookie() {
-  const session = getCookie("LEETCODE_SESSION");
-  if (!session) return "unknown";
-  const parts = session.split('.');
-  if (parts.length !== 3) return "unknown";
-  try {
-    const payload = JSON.parse(atob(base64UrlToBase64(parts[1])));
-    return payload.username || payload.user_slug || "unknown";
-  } catch (e) {
-    console.error("Cookie decode error", e);
-    return "unknown";
+function getUsernameFromPage() {
+  // Method 1: Profile Link in Navbar (Primary)
+  const navbarProfileLink = document.querySelector('a[href^="/u/"]');
+  if (navbarProfileLink) {
+    const username = navbarProfileLink.href.split('/').filter(Boolean).pop();
+    if (username) return username;
   }
+
+  // Method 2: Avatar Image Link
+  const avatarImageLink = document.querySelector('a[href^="/u/"] img');
+  if (avatarImageLink && avatarImageLink.parentElement) {
+    const username = avatarImageLink.parentElement.href.split('/').filter(Boolean).pop();
+    if (username) return username;
+  }
+
+  // Method 3: Dropdown Profile Menu
+  const dropdownProfileLink = document.querySelector('div[class*="dropdown"] a[href^="/u/"]');
+  if (dropdownProfileLink) {
+    const username = dropdownProfileLink.href.split('/').filter(Boolean).pop();
+    if (username) return username;
+  }
+
+  // Method 4: Meta Tags (Rare Case)
+  const metaUser = document.querySelector('meta[name="user-login"]');
+  if (metaUser && metaUser.content) {
+    return metaUser.content;
+  }
+
+  // Method 5: Search inside possible User Dropdown (if opened)
+  const dropdownItems = document.querySelectorAll('a[href^="/u/"]');
+  for (const item of dropdownItems) {
+    const username = item.href.split('/').filter(Boolean).pop();
+    if (username) return username;
+  }
+
+  // Fallback: Return unknown
+  return "unknown";
 }
 
 function getRuntime() {
-  const runtimeSpans = document.querySelectorAll('span.text-sd-foreground.text-lg.font-semibold');
-  for (const span of runtimeSpans) {
-    let parentDiv = span.closest('div');
-    while (parentDiv) {
-      if (parentDiv.textContent && parentDiv.textContent.includes("Runtime")) {
-        const unitSpan = span.nextElementSibling;
-        const unitText = unitSpan ? unitSpan.innerText.trim() : "";
-        return span.innerText.trim() + (unitText ? " " + unitText : "");
-      }
-      parentDiv = parentDiv.parentElement;
+  const runtimeBlocks = document.querySelectorAll('div.group.flex.flex-col');
+  for (const block of runtimeBlocks) {
+    const label = block.querySelector('div.text-sm');
+    const valueSpan = block.querySelector('span.text-lg.font-semibold');
+    const unitSpan = block.querySelector('span.text-sd-muted-foreground.text-sm');
+
+    if (label && label.innerText.includes("Runtime") && valueSpan && unitSpan) {
+      return `${valueSpan.innerText.trim()} ${unitSpan.innerText.trim()}`;
     }
   }
   return "N/A";
@@ -72,13 +82,13 @@ function extractSubmissionInfo() {
       return null;
     }
     return {
-      username: getUsernameFromSessionCookie(),
+      username: getUsernameFromPage(),
       questionTitle: getProblemTitle(),
       status: statusText,
       language: getLanguage(),
       runTime: getRuntime(),
       timestamp: new Date().toISOString(),
-      acceptedCount: 0 // Extend later for accepted count
+      acceptedCount: 0 // Placeholder, can extend later.
     };
   } catch (e) {
     console.error("Error extracting submission info:", e);
