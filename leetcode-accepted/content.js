@@ -1,39 +1,9 @@
 function getUsernameFromPage() {
-  // Method 1: Profile Link in Navbar (Primary)
-  const navbarProfileLink = document.querySelector('a[href^="/u/"]');
-  if (navbarProfileLink) {
-    const username = navbarProfileLink.href.split('/').filter(Boolean).pop();
+  const profileLinks = document.querySelectorAll('a[href^="/u/"]');
+  for (const link of profileLinks) {
+    const username = link.href.split('/').filter(Boolean).pop();
     if (username) return username;
   }
-
-  // Method 2: Avatar Image Link
-  const avatarImageLink = document.querySelector('a[href^="/u/"] img');
-  if (avatarImageLink && avatarImageLink.parentElement) {
-    const username = avatarImageLink.parentElement.href.split('/').filter(Boolean).pop();
-    if (username) return username;
-  }
-
-  // Method 3: Dropdown Profile Menu
-  const dropdownProfileLink = document.querySelector('div[class*="dropdown"] a[href^="/u/"]');
-  if (dropdownProfileLink) {
-    const username = dropdownProfileLink.href.split('/').filter(Boolean).pop();
-    if (username) return username;
-  }
-
-  // Method 4: Meta Tags (Rare Case)
-  const metaUser = document.querySelector('meta[name="user-login"]');
-  if (metaUser && metaUser.content) {
-    return metaUser.content;
-  }
-
-  // Method 5: Search inside possible User Dropdown (if opened)
-  const dropdownItems = document.querySelectorAll('a[href^="/u/"]');
-  for (const item of dropdownItems) {
-    const username = item.href.split('/').filter(Boolean).pop();
-    if (username) return username;
-  }
-
-  // Fallback: Return unknown
   return "unknown";
 }
 
@@ -71,8 +41,7 @@ function getProblemTitle() {
 
 function getSubmissionStatus() {
   const statusElement = document.querySelector('span[data-e2e-locator="submission-result"]');
-  if (!statusElement) return null;
-  return statusElement.innerText.trim();
+  return statusElement ? statusElement.innerText.trim() : null;
 }
 
 function extractSubmissionInfo() {
@@ -88,12 +57,22 @@ function extractSubmissionInfo() {
       language: getLanguage(),
       runTime: getRuntime(),
       timestamp: new Date().toISOString(),
-      acceptedCount: 0 // Placeholder, can extend later.
+      acceptedCount: 0
     };
   } catch (e) {
     console.error("Error extracting submission info:", e);
     return null;
   }
+}
+
+function saveSubmissionToStorage(submission) {
+  chrome.storage.local.get({ acceptedSubmissions: [] }, (items) => {
+    const submissions = items.acceptedSubmissions || [];
+    submissions.push(submission);
+    chrome.storage.local.set({ acceptedSubmissions: submissions }, () => {
+      console.log("[LeetCode Tracker] Submission saved to storage.", submissions);
+    });
+  });
 }
 
 let lastLoggedSubmissionJSON = null;
@@ -133,7 +112,7 @@ function setupSubmitButtonListener() {
       console.log("[LeetCode Tracker] Submit button clicked, waiting for submission result...");
 
       try {
-        const resultElem = await waitForElement('span[data-e2e-locator="submission-result"]', 15000);
+        await waitForElement('span[data-e2e-locator="submission-result"]', 15000);
 
         setTimeout(() => {
           const submissionInfo = extractSubmissionInfo();
@@ -141,6 +120,7 @@ function setupSubmitButtonListener() {
             const json = JSON.stringify(submissionInfo);
             if (json !== lastLoggedSubmissionJSON) {
               console.log("[LeetCode Accepted Submission]", submissionInfo);
+              saveSubmissionToStorage(submissionInfo);
               lastLoggedSubmissionJSON = json;
             } else {
               console.log("[LeetCode Tracker] Duplicate accepted submission ignored.");
@@ -160,5 +140,5 @@ function setupSubmitButtonListener() {
   attachListener();
 }
 
-// Initialize monitoring
+// Initialize
 setupSubmitButtonListener();

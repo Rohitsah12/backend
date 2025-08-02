@@ -1,15 +1,18 @@
-// popup.js
-
 async function getStoredSubmissions() {
-  return new Promise((resolve) =>
-    chrome.storage.local.get({ acceptedSubmissions: [] }, (items) => resolve(items.acceptedSubmissions))
-  );
+  return new Promise((resolve) => {
+    chrome.storage.local.get({ acceptedSubmissions: [] }, (items) => {
+      resolve(items.acceptedSubmissions);
+    });
+  });
 }
 
 async function clearStoredSubmissions() {
-  return new Promise((resolve) =>
-    chrome.storage.local.set({ acceptedSubmissions: [] }, () => resolve())
-  );
+  return new Promise((resolve) => {
+    chrome.storage.local.set({ acceptedSubmissions: [] }, () => {
+      console.log("[LeetCode Tracker] Submissions cleared from storage.");
+      resolve();
+    });
+  });
 }
 
 function formatDate(dateStr) {
@@ -31,7 +34,6 @@ async function render() {
     return;
   }
 
-  // Show latest first (reverse chronological)
   submissions.slice().reverse().forEach(sub => {
     const li = document.createElement("li");
     li.innerHTML = `
@@ -43,11 +45,18 @@ async function render() {
   });
 }
 
+// Event Listeners
+
 document.getElementById("clearBtn").addEventListener("click", async () => {
   if (confirm("Clear all tracked submission data?")) {
     await clearStoredSubmissions();
     await render();
   }
+});
+
+document.getElementById("refreshBtn").addEventListener("click", async () => {
+  console.log("[LeetCode Tracker] Manual Refresh Clicked.");
+  await render();
 });
 
 render();

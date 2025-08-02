@@ -3,17 +3,9 @@
   "name": "LeetCode Accepted Submission Tracker",
   "version": "1.0",
   "description": "Tracks accepted LeetCode submissions live for the user.",
-  "permissions": [
-    "storage",
-    "scripting",
-    "activeTab"
-  ],
-  "host_permissions": [
-    "https://leetcode.com/*"
-  ],
-  "action": {
-    "default_popup": "popup.html"
-  },
+  "permissions": ["storage", "scripting", "activeTab"],
+  "host_permissions": ["https://leetcode.com/*"],
+  "action": { "default_popup": "popup.html" },
   "content_scripts": [
     {
       "matches": ["https://leetcode.com/problems/*"],
